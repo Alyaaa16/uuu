@@ -75,13 +75,18 @@ def convert2(dcm_file_path, voi_lut=True):
     convert by voi_lui function from pydicom
     """
     dicom = pydicom.dcmread(dcm_file_path)
+    def _safe_float(v):
+        if isinstance(v, str):
+            return float(v.strip().rstrip(','))
+        return float(v)
+
     # Handle multi-valued WindowCenter and WindowWidth
     if "WindowCenter" in dicom:
         wc = dicom.WindowCenter
-        dicom.WindowCenter = float(wc[0]) if isinstance(wc, pydicom.multival.MultiValue) else float(wc)
+        dicom.WindowCenter = _safe_float(wc[0]) if isinstance(wc, pydicom.multival.MultiValue) else _safe_float(wc)
     if "WindowWidth" in dicom:
         ww = dicom.WindowWidth
-        dicom.WindowWidth = float(ww[0]) if isinstance(ww, pydicom.multival.MultiValue) else float(ww)
+        dicom.WindowWidth = _safe_float(ww[0]) if isinstance(ww, pydicom.multival.MultiValue) else _safe_float(ww)
 
     try:
         if voi_lut:
