@@ -29,7 +29,7 @@ def log_failed(msg):
 
 def process_dicom(dicom_file):
     try:
-        data = pydicom.read_file(dicom_file)
+        data = pydicom.dcmread(dicom_file)
     except Exception as e:
         print(dicom_file, e)
         log_failed(dicom_file)
