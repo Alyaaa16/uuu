@@ -76,10 +76,13 @@ def convert2(dcm_file_path, voi_lut=True):
     """
     dicom = pydicom.dcmread(dcm_file_path)
     # Handle multi-valued WindowCenter and WindowWidth
-    if isinstance(dicom.get("WindowCenter"), pydicom.multival.MultiValue):
-        dicom.WindowCenter = dicom.WindowCenter[0]
-    if isinstance(dicom.get("WindowWidth"), pydicom.multival.MultiValue):
-        dicom.WindowWidth = dicom.WindowWidth[0]
+    if "WindowCenter" in dicom:
+        wc = dicom.WindowCenter
+        dicom.WindowCenter = float(wc[0]) if isinstance(wc, pydicom.multival.MultiValue) else float(wc)
+    if "WindowWidth" in dicom:
+        ww = dicom.WindowWidth
+        dicom.WindowWidth = float(ww[0]) if isinstance(ww, pydicom.multival.MultiValue) else float(ww)
+
     try:
         if voi_lut:
             data = apply_voi_lut(dicom.pixel_array, dicom)
