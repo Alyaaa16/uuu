@@ -20,7 +20,7 @@ import argparse
 from pathlib import Path
 from joblib import Parallel, delayed
 from pydicom.pixel_data_handlers.util import apply_voi_lut
-
+from pydicom import dcmread 
 
 def log_(msg, log_file):
     print(str(msg))
@@ -74,7 +74,7 @@ def convert2(dcm_file_path, voi_lut=True):
     """
     convert by voi_lui function from pydicom
     """
-    dicom = pydicom.read_file(dcm_file_path)
+    dicom = pydicom.dcmread(dcm_file_path)
     try:
         if voi_lut:
             data = apply_voi_lut(dicom.pixel_array, dicom)
