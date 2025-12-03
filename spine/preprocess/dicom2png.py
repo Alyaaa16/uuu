@@ -75,6 +75,11 @@ def convert2(dcm_file_path, voi_lut=True):
     convert by voi_lui function from pydicom
     """
     dicom = pydicom.dcmread(dcm_file_path)
+    # Handle multi-valued WindowCenter and WindowWidth
+    if isinstance(dicom.get("WindowCenter"), pydicom.multival.MultiValue):
+        dicom.WindowCenter = dicom.WindowCenter[0]
+    if isinstance(dicom.get("WindowWidth"), pydicom.multival.MultiValue):
+        dicom.WindowWidth = dicom.WindowWidth[0]
     try:
         if voi_lut:
             data = apply_voi_lut(dicom.pixel_array, dicom)
